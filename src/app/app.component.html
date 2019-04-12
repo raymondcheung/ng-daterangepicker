@@ -1,20 +1,130 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div class="container">
+  <div class="card">
+    <div class="card-body configurator">
+      <h1 style="margin: 0 0 20px 0">Configuration Builder</h1>
+      <h3>text input changes configs onBlur</h3>
+      <form>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="parentEl">parentEl</label>
+            <input (blur)="buildConfig()" type="text" name="parentEl" [(ngModel)]="config.parentEl" class="form-control" id="parentEl" value="" placeholder="body">
+          </div>
+          <div class="form-group">
+            <label for="startDate">startDate</label>
+            <input (blur)="buildConfig()" type="text" name="startDate" [(ngModel)]="config.startDate" class="form-control" id="startDate">
+          </div>
+          <div class="form-group">
+            <label for="endDate">endDate</label>
+            <input (blur)="buildConfig()" type="text" name="endDate" [(ngModel)]="config.endDate" class="form-control" id="endDate">
+          </div>
+          <div class="form-group">
+            <label for="minDate">minDate</label>
+            <input (blur)="buildConfig()" type="text" name="minDate" [(ngModel)]="config.minDate" class="form-control" id="minDate" value="" ng-init="config.minDate = ">
+          </div>
+          <div class="form-group">
+            <label for="maxDate">maxDate</label>
+            <input (blur)="buildConfig()" type="text" name="maxDate" [(ngModel)]="config.maxDate" class="form-control" id="maxDate" value="" ng-init="config.maxDate = ">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="checkbox">
+            <label>
+              <input (change)="buildConfig()" type="checkbox" name="singleDatePicker" [(ngModel)]="config.options.singleDatePicker" id="singleDatePicker"> singleDatePicker
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input (change)="buildConfig()" type="checkbox" name="showDropdowns" [(ngModel)]="config.options.showDropdowns" id="showDropdowns"> showDropdowns
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input (change)="buildConfig()" type="checkbox" name="showWeekNumbers" [(ngModel)]="config.options.showWeekNumbers" id="showWeekNumbers"> showWeekNumbers
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input (change)="buildConfig()" type="checkbox" name="showISOWeekNumbers" [(ngModel)]="config.options.showISOWeekNumbers" id="showISOWeekNumbers"> showISOWeekNumbers
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input (change)="buildConfig()" type="checkbox" name="timePicker" [(ngModel)]="config.timePicker.show" id="timePicker"> timePicker
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input (change)="buildConfig()" type="checkbox" name="timePicker24Hour" [(ngModel)]="config.timePicker.timePicker24Hour" id="timePicker24Hour"> timePicker24Hour
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="timePickerIncrement">timePickerIncrement (in minutes)</label>
+            <input (blur)="buildConfig()" type="text" name="timePickerIncrement" [(ngModel)]="config.timePicker.timePickerIncrement" class="form-control" id="timePickerIncrement" value="1">
+          </div>
+          <div class="checkbox">
+            <label>
+              <input (change)="buildConfig()" type="checkbox" name="timePickerSeconds" [(ngModel)]="config.timePicker.timePickerSeconds" id="timePickerSeconds"> timePickerSeconds
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input (change)="buildConfig()" type="checkbox" name="dateLimit" [(ngModel)]="setDateLimit" id="dateLimit"> dateLimit (with example date range span)
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <!-- Only the config.ranges value needs to be set in order for the calendar to function correctly, setting rangesEnabled is solely for the purpose of the input box for the demo; so rangesEnabled is not used anywhere in the DaterangePicker code -->
+              <input (change)="buildConfig()" type="checkbox" name="rangesEnabled" [(ngModel)]="setRanges" id="ranges"> ranges (with example predefined ranges)
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input (change)="buildConfig()" type="checkbox" name="localeEnabled" [(ngModel)]="config.localeEnabled" id="locale"> locale (with example settings)
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input (change)="buildConfig()" type="checkbox" name="linkedCalendars" [(ngModel)]="config.linkedCalendars" id="linkedCalendars" ng-init="config.linkedCalendars=true"> linkedCalendars
+            </label>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input (change)="buildConfig()" type="checkbox" name="alwaysShowCalendars" [(ngModel)]="config.alwaysShowCalendars" id="alwaysShowCalendars"> alwaysShowCalendars
+            </label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="buttonClasses">buttonClasses</label>
+            <input (blur)="buildConfig()" type="text" name="buttonClasses" [(ngModel)]="config.buttonClasses" class="form-control" id="buttonClasses" value="btn btn-sm">
+          </div>
+          <div class="form-group">
+            <label for="applyClass">applyClass</label>
+            <input (blur)="buildConfig()" type="text" name="applyClass" [(ngModel)]="config.applyClass" class="form-control" id="applyClass" value="btn-success">
+          </div>
+          <div class="form-group">
+            <label for="cancelClass">cancelClass</label>
+            <input (blur)="buildConfig()" type="text" name="cancelClass" [(ngModel)]="config.cancelClass" class="form-control" id="cancelClass" value="btn-default">
+          </div>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 col-md-offset-2 demo">
+      <h4>Your Date Range Picker</h4>
+       <dp-daterange-picker [inputId]="'config-demo'" [config]="config"></dp-daterange-picker> 
+      <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+    </div>
+    <div class="col-md-6">
+      <h4>Configuration</h4>
+      <div class="well">
+        <pre style="text-indent:0">
+          Config = {{config | json}}
+        </pre>
+      </div>
+    </div>
+  </div>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
-
