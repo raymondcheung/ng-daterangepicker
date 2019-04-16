@@ -115,14 +115,13 @@
   <div class="row">
     <div class="col-md-4 col-md-offset-2 demo">
       <h4>Your Date Range Picker</h4>
-       <dp-daterange-picker [inputId]="'config-demo'" [config]="config"></dp-daterange-picker> 
+       <dp-daterange-picker [inputId]="'config-demo'" [config]="config$ | async"></dp-daterange-picker> 
       <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
     </div>
     <div class="col-md-6">
       <h4>Configuration</h4>
       <div class="well">
-        <pre style="text-indent:0">
-          Config = {{config | json}}
+        <pre style="text-indent:0" [innerHTML]="(config$ | async) | json">
         </pre>
       </div>
     </div>

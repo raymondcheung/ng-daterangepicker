@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Config, DateLimit, Locale } from 'src/lib/daterange-picker/core/types';
 import * as moment from 'moment';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -19,39 +20,29 @@ export class AppComponent {
   };
   public ranges = {
     "Today": [
-      moment("2019-04-12T06:19:34.749Z"),
-      moment("2019-04-12T06:19:34.749Z")
+      moment().startOf('day'),
+      moment().endOf('day')
     ],
     "Yesterday": [
-      moment("2019-04-11T06:19:34.749Z"),
-      moment("2019-04-11T06:19:34.750Z")
+      moment().subtract(1, 'days'),
+      moment().subtract(1, 'days').endOf('day')
     ],
     "Last 7 Days": [
-      moment("2019-04-06T06:19:34.750Z"),
-      moment("2019-04-12T06:19:34.750Z")
+      moment().subtract(7, 'days'),
+      moment().endOf('day')
     ],
     "Last 30 Days": [
-      moment("2019-03-14T06:19:34.750Z"),
-      moment("2019-04-12T06:19:34.751Z")
+      moment().subtract(30, 'days'),
+      moment().endOf('day')
     ],
     "This Month": [
-      moment("2019-04-01T07:00:00.000Z"),
-      moment("2019-05-01T06:59:59.999Z")
+      moment().startOf('month'),
+      moment().endOf('month').endOf('day')
     ],
     "Last Month": [
-      moment("2019-03-01T08:00:00.000Z"),
-      moment("2019-04-01T06:59:59.999Z")
+      moment().subtract(1, 'months').startOf('month'),
+      moment().subtract(1, 'months').endOf('month').endOf('day')
     ]
-  };
-  public locale: Locale = {
-    format: '',
-    direction: 'ltr',
-    separator: '',
-    weekLabel: '',
-    customRangeLabel: '',
-    daysOfWeek: moment.weekdaysMin(),
-    monthNames: moment.monthsShort(),
-    firstDay: moment.localeData().firstDayOfWeek(),
   };
 
   public config: Config = {
@@ -59,7 +50,7 @@ export class AppComponent {
       startDate: moment('11/08/2016').startOf('day'),
       endDate: moment('11/25/2016').startOf('day'),
       minDate: moment('09/01/2015'),
-      maxDate: moment('09/01/2017'),
+      maxDate: moment('09/01/2021'),
     },
     options: {
       singleDatePicker: false,
@@ -76,19 +67,60 @@ export class AppComponent {
       timePickerIncrement: 1,
       timePickerSeconds: true,
     },
+    locale: {
+      format: '',
+      direction: 'ltr',
+      separator: '',
+      weekLabel: '',
+      customRangeLabel: '',
+      daysOfWeek: moment.weekdaysMin(),
+      monthNames: moment.monthsShort(),
+      firstDay: moment.localeData().firstDayOfWeek(),
+    },
     dateLimit: null,
     applyClass: null,
     cancelClass: null
   };
 
+  public config$ = new BehaviorSubject(this.config);
+
   buildConfig() {
-    this.config = {
+    let format = '';
+    if (this.config.timePicker.show) {
+      if (this.config.timePicker.timePickerSeconds) {
+        format = 'MM/DD/YYYY HH:mm:ss';
+      } else {
+        format = 'MM/DD/YYYY HH:mm';
+      }
+    } else {
+      format = moment.localeData().longDateFormat('L');
+    }
+    // update day names order to firstDay
+    let daysOfWeek;
+    if (this.config.locale.firstDay !== 0) {
+      let iterator = this.config.locale.firstDay;
+      while (iterator > 0) {
+        daysOfWeek.push(this.config.locale.daysOfWeek.shift());
+        iterator--;
+      }
+    } else {
+      daysOfWeek = this.config.locale.daysOfWeek;
+    }
+    const config = {
       ...this.config,
       dateLimit: this.setDateLimit ? this.dateLimit : null,
       ranges: this.setRanges ? this.ranges : null,
-      locale: this.setLocale ? this.locale : null
+      locale: {
+        ...this.config.locale,
+        format,
+        daysOfWeek
+      }
     };
+
+    this.config$.next(config)
   }
 
-  constructor() { }
+  constructor() {
+    this.buildConfig();
+  }
 }
