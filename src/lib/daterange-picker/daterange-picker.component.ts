@@ -3,7 +3,12 @@ import * as _ from 'lodash';
 import { DOCUMENT } from '@angular/common';
 import { Subject, BehaviorSubject } from 'rxjs';
 import * as moment from 'moment';
-import { Config, Locale, DefaultLocale } from './core/types';
+import { Config, Locale, DefaultLocale, Calendar } from './core/types';
+
+export interface Side {
+  timeSelected: any;
+  calendar: Calendar;
+}
 
 @Component({
   selector: 'dp-daterange-picker',
@@ -61,8 +66,8 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
   private leftInputHasFocus: boolean;
   public rightInputHasFocus: boolean;
 
-  public left: any;
-  public right: any;
+  public left: Side;
+  public right: Side;
   public isInvalidDate: (x: moment.Moment) => boolean;
   public isCustomDate: (x: moment.Moment) => boolean;
   public ranges: {} = {};
@@ -120,8 +125,14 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
     this.locale = !!this.config.locale ? this.config.locale : new DefaultLocale();
 
     const dr = this.config.dateRange;
-    this.left = {};
-    this.right = {};
+    this.left = {
+      timeSelected: null,
+      calendar: {}
+    };
+    this.right = {
+      timeSelected: null,
+      calendar: {}
+    };
 
     // default settings for options
     dr.startDate = (dr.startDate !== undefined) ? dr.startDate : moment().startOf('day');
@@ -798,18 +809,23 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
    * Set the year using dropdown.  If linked calendar option is enabled,
    * then set other calendar side also.
    */
-  clickDropdownYear(side: string, year: number) {
+  clickDropdownYear(side: string, _year: string) {
+    const year = parseInt(_year);
     if (this.config.options.linkedCalendars) {
       if (side === 'left') {
         this.left.calendar.month.year(year);
-        const date = new Date(this.left.calendar.month),
-            m = moment(date);
-        this.right.calendar.month.set(m.toObject()).add(1, 'month');
+        if (this.left.calendar.month.month() === 11) {
+          this.right.calendar.month.year(year + 1);
+        } else {
+          this.right.calendar.month.year(year);
+        }
       } else {
         this.right.calendar.month.year(year);
-        const date = new Date(this.right.calendar.month),
-            m = moment(date);
-        this.left.calendar.month.set(m.toObject()).subtract(1, 'month');
+        if (this.right.calendar.month.month() === 0) {
+          this.left.calendar.month.year(year-1);
+        } else {
+          this.left.calendar.month.year(year);
+        }
       }
     } else {
       this[side].calendar.month.year(year);
@@ -826,14 +842,10 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
     if (this.config.options.linkedCalendars) {
       if (side === 'left') {
         this.left.calendar.month.month(month);
-        const date = new Date(this.left.calendar.month),
-            m = moment(date);
-        this.right.calendar.month.set(m.toObject()).add(1, 'month');
+        this.right.calendar.month.month(month).add(1, 'month');
       } else {
         this.right.calendar.month.month(month);
-        const date = new Date(this.right.calendar.month),
-            m = moment(date);
-        this.left.calendar.month.set(m.toObject()).subtract(1, 'month');
+        this.left.calendar.month.month(month).subtract(1, 'month');
       }
     } else {
       this[side].calendar.month.month(month);

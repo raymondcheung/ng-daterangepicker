@@ -1,7 +1,14 @@
 import * as moment from 'moment';
 
 export interface Calendar {
-
+  [key: number]: {
+    inRange?: string;
+    date?: moment.Moment;
+  }[];
+  firstDay?: moment.Moment;
+  lastDay?: moment.Moment;
+  month?: moment.Moment;
+  disabled?: boolean;
 }
 
 // example { unitOfTime: 1, amount: 'd' } if you want to add one day
