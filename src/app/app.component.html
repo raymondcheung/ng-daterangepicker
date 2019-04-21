@@ -80,12 +80,12 @@
           </div>
           <div class="checkbox">
             <label>
-              <input (change)="buildConfig()" type="checkbox" name="localeEnabled" [(ngModel)]="config.localeEnabled" id="locale"> locale (with example settings)
+              <input (change)="buildConfig()" type="checkbox" name="localeEnabled" [(ngModel)]="localeEnabled" id="locale"> locale (with example settings)
             </label>
           </div>
           <div class="checkbox">
             <label>
-              <input (change)="buildConfig()" type="checkbox" name="linkedCalendars" [(ngModel)]="config.linkedCalendars" id="linkedCalendars" ng-init="config.linkedCalendars=true"> linkedCalendars
+              <input (change)="buildConfig()" type="checkbox" name="linkedCalendars" [(ngModel)]="config.options.linkedCalendars" id="linkedCalendars" ng-init="config.linkedCalendars=true"> linkedCalendars
             </label>
           </div>
           <div class="checkbox">

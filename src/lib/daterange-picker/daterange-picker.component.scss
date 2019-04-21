@@ -52,6 +52,27 @@
     display: none;
     max-width: 270px;
     margin: 4px; }
+    .prev, .next {
+      span {
+        display: inline-block;
+        padding: 3px;
+        border: solid black;
+        transform: rotate(135deg);
+        -webkit-transform: rotate(135deg);
+        box-sizing: border-box;
+        color: #fff;
+        border-radius: 0;
+      }
+      &.hidden {
+        visibility: hidden;
+      }
+    }
+    .prev span {
+      border-width: 0 2px 2px 0 !important;
+    }
+    .next span {
+      border-width: 2px 0 0 2px !important;
+    }
     .daterangepicker .calendar.single .calendar-table {
       border: none; }
     .daterangepicker .calendar th, .daterangepicker .calendar td {

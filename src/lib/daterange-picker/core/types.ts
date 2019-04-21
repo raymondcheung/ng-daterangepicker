@@ -1,5 +1,9 @@
 import * as moment from 'moment';
 
+export interface Calendar {
+
+}
+
 // example { unitOfTime: 1, amount: 'd' } if you want to add one day
 export interface DateLimit {
   amount: moment.DurationInputArg1;
@@ -43,6 +47,17 @@ export interface Options {
   readonly showCustomRangeLabel?: boolean;
   readonly singleDatePicker?: boolean;
   readonly linkedCalendars?: boolean;
+}
+
+export class DefaultLocale implements Locale {
+  format = '';
+  direction = 'ltr';
+  separator = '';
+  weekLabel = '';
+  customRangeLabel: '';
+  daysOfWeek = moment.weekdaysMin();
+  monthNames = moment.monthsShort();
+  firstDay = moment.localeData().firstDayOfWeek();
 }
 
 export interface Locale {

@@ -1,6 +1,6 @@
 <input type="text" id="{{inputId}}" class="form-control" [(ngModel)]="daterangeInputValue" (focus)="show()" />
 <div class="daterangepicker-wrapper">
-<div *ngIf="isShowing$ | async" class="daterangepicker dropdown-menu {{opensClass}} {{showCalendarClass}} {{config.locale.direction}}" [ngClass]="getDaterangepickerClasses()">
+<div *ngIf="isShowing$ | async" class="daterangepicker dropdown-menu {{opensClass}} {{showCalendarClass}} {{locale.direction}}" [ngClass]="getDaterangepickerClasses()">
   <div class="ranges">
       <div class="range_inputs">
           <ul *ngIf="keys(ranges).length > 0">
@@ -38,13 +38,13 @@
           <thead>
             <tr>
               <th *ngIf="config.options.showWeekNumbers || config.options.showISOWeekNumbers"></th>
-              <th *ngIf="!this.config.dateRange.minDate || this.config.dateRange.minDate.isBefore(left.calendar.firstDay)" (click)="clickPrev('left')" class="prev available"><i class="fa fa-{{arrow.left}} glyphicon glyphicon-{{arrow.left}}"></i></th>
+              <th [class.hidden]="isPreviousButtonHidden('left')" (click)="clickPrev('left')" class="prev available"><span></span></th>
               <th colspan="5" class="month">
                 <!-- If we are not showing dropdowns, just output plain text -->
-                <div *ngIf="!config.options.showDropdowns">{{config.locale.monthNames[left.calendar[1][1].date.month()] + left.calendar[1][1].date.format(" YYYY")}}</div>
+                <div *ngIf="!config.options.showDropdowns">{{locale.monthNames[left.calendar[1][1].date.month()] + left.calendar[1][1].date.format(" YYYY")}}</div>
                 <!-- If we are showing dropdowns, just output appropriate select inputs -->
                 <select *ngIf="config.options.showDropdowns" class="monthselect" [(ngModel)]="left.selectedMonth" (change)="clickDropdownMonth('left', left.selectedMonth)" ng-init="left.selectedMonth=left.calendar.month.month()+''">
-                  <option *ngFor="let i of getArrayWithNumbersBetween(-1, 12)" [disabled]="!(!left.inMinYear || i >= left.minDate.month()) && (!left.inMaxYear || i <= left.maxDate.month())" value="{{i}}">{{config.locale.monthNames[i]}}</option>
+                  <option *ngFor="let i of getArrayWithNumbersBetween(-1, 12)" [disabled]="!(!left.inMinYear || i >= left.minDate.month()) && (!left.inMaxYear || i <= left.maxDate.month())" value="{{i}}">{{locale.monthNames[i]}}</option>
                 </select>
 
                 <select *ngIf="config.options.showDropdowns" class="yearselect" [(ngModel)]="left.selectedYear" (change)="clickDropdownYear('left', left.selectedYear)" ng-init="left.selectedYear=left.calendar.month.year()+''">
@@ -53,7 +53,7 @@
                   </option>
                 </select>
               </th>
-              <th [hidden]="(!this.config.dateRange.maxDate || this.config.dateRange.maxDate.isAfter(left.calendar.lastDay)) && (!linkedCalendars || singleDatePicker)" (click)="clickNext('left')" class="next available"><i class="fa fa-{{arrow.right}} glyphicon glyphicon-{{arrow.right}}"></i></th>
+              <th [class.hidden]="isNextButtonHidden('left')" (click)="clickNext('left')" class="next available"><span></span></th>
             </tr>
           </thead>
           <tbody>
@@ -99,19 +99,19 @@
           <thead>
             <tr>
               <th [hidden]="!config.options.showWeekNumbers || config.options.showISOWeekNumbers"></th>
-              <th [hidden]="(!this.config.dateRange.minDate || this.config.dateRange.minDate.isBefore(right.calendar.firstDay)) && (!linkedCalendars)" (click)="clickPrev('right')" class="prev available"><i class="fa fa-{{arrow.left}} glyphicon glyphicon-{{arrow.left}}"></i></th>
+              <th [class.hidden]="isPreviousButtonHidden('right')" (click)="clickPrev('right')" class="prev available"><span></span></th>
               <th colspan="5" class="month">
                 <!-- If we are not showing dropdowns, just output plain text -->
-                <div [hidden]="!!config.options.showDropdowns">{{config.locale.monthNames[right.calendar[1][1].date.month()] + right.calendar[1][1].date.format(" YYYY")}}</div>
+                <div [hidden]="!!config.options.showDropdowns">{{locale.monthNames[right.calendar[1][1].date.month()] + right.calendar[1][1].date.format(" YYYY")}}</div>
                 <!-- If we are showing dropdowns, just output appropriate select inputs -->
                 <select [hidden]="!config.options.showDropdowns" class="monthselect" [(ngModel)]="right.selectedMonth" (change)="clickDropdownMonth('right', right.selectedMonth)" ng-init="right.selectedMonth=right.calendar.month.month()+''">
-                  <option  *ngFor="let i of getArrayWithNumbersBetween(-1, 12)" [disabled]="!(!right.inMinYear || i >= right.minDate.month()) && (!right.inMaxYear || i <= right.maxDate.month())" value="{{i}}">{{config.locale.monthNames[i]}}</option>
+                  <option  *ngFor="let i of getArrayWithNumbersBetween(-1, 12)" [disabled]="!(!right.inMinYear || i >= right.minDate.month()) && (!right.inMaxYear || i <= right.maxDate.month())" value="{{i}}">{{locale.monthNames[i]}}</option>
                 </select>
                 <select [hidden]="!config.options.showDropdowns" class="yearselect" [(ngModel)]="right.selectedYear" (change)="clickDropdownYear('right', right.selectedYear)" ng-init="right.selectedYear=right.calendar.month.year()+''">
                   <option *ngFor="let y of getArrayWithNumbersBetween(this.config.dateRange.minDate.year() - 1, this.config.dateRange.maxDate.year() + 1)">{{y}}</option>
                 </select>
               </th>
-              <th [hidden]="!!this.config.dateRange.maxDate || this.config.dateRange.maxDate.isAfter(right.calendar.lastDay)" (click)="clickNext('right')" class="next available"><i class="fa fa-{{arrow.right}} glyphicon glyphicon-{{arrow.right}}"></i></th>
+              <th [class.hidden]="isNextButtonHidden('right')" (click)="clickNext('right')" class="next available"><span></span></th>
             </tr>
           </thead>
 

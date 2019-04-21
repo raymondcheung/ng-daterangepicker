@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { DOCUMENT } from '@angular/common';
 import { Subject, BehaviorSubject } from 'rxjs';
 import * as moment from 'moment';
-import { Config } from './core/types';
+import { Config, Locale, DefaultLocale } from './core/types';
 
 @Component({
   selector: 'dp-daterange-picker',
@@ -89,6 +89,7 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
   public outputSecondDisabled: (i: number, side: string) => boolean;
   public outputAMPMDisabled: (i: string, side: string) => boolean;
 
+  public locale: Locale;
   public daterangepickerStart: string;
   public daterangepickerEnd: string;
   public showCalendarsClass: string;
@@ -116,6 +117,8 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.locale = !!this.config.locale ? this.config.locale : new DefaultLocale();
+
     const dr = this.config.dateRange;
     this.left = {};
     this.right = {};
@@ -143,12 +146,12 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
           end: moment.Moment;
       for (let range in this.config.ranges) {
         if (typeof this.config.ranges[range][0] === 'string')
-          start = moment(this.config.ranges[range][0], this.config.locale.format);
+          start = moment(this.config.ranges[range][0], this.locale.format);
         else
           start = moment(this.config.ranges[range][0]);
 
         if (typeof this.config.ranges[range][1] === 'string')
-          end = moment(this.config.ranges[range][1], this.config.locale.format);
+          end = moment(this.config.ranges[range][1], this.locale.format);
         else
           end = moment(this.config.ranges[range][1]);
 
@@ -229,7 +232,7 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
           showTime = this.config.timePicker.show,
           timePickerIncrement = this.config.timePicker.timePickerIncrement;
     if (typeof startDate === 'string')
-      dr.startDate = moment(startDate, this.config.locale.format);
+      dr.startDate = moment(startDate, this.locale.format);
     if (typeof startDate === 'object')
       dr.startDate = moment(startDate);
 
@@ -263,7 +266,7 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
           showTime = this.config.timePicker.show,
           timePickerIncrement = this.config.timePicker.timePickerIncrement;
     if (typeof endDate === 'string')
-      dr.endDate = moment(endDate, this.config.locale.format);
+      dr.endDate = moment(endDate, this.locale.format);
 
     if (typeof endDate === 'object')
       dr.endDate = moment(endDate);
@@ -383,6 +386,26 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
     if (this.config.dateRange.endDate == null) return;
   }
 
+  public isPreviousButtonHidden(side) {
+    if (side === 'right') {
+      if (this.config.options.linkedCalendars) return true;
+      if (this.right.calendar.firstDay.isBefore(this.left.calendar.lastDay.add(1, 'days'))) return true;
+    } else if (side === 'left') {
+      if (this.config.dateRange.minDate.isAfter(this.left.calendar.firstDay)) return true;
+    }
+    return false;
+  }
+
+  public isNextButtonHidden(side) {
+    if (side === 'right') {
+      if (this.config.dateRange.maxDate.isBefore(this.right.calendar.lastDay)) return true;
+    } else if (side === 'left') {
+      if (this.config.options.linkedCalendars) return true;
+      if (!this.left.calendar.lastDay.add(1, 'days').isBefore(this.right.calendar.firstDay)) return true;
+    }
+    return false;
+  }
+
   getArrayWithNumberOfElements(x: number) {
     return Array(x);
   }
@@ -489,10 +512,10 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
       for (let i = 0; i < 6; i++) {
           this[side].calendar[i] = [];
       }
-      this[side].startDay = this[side].daysInLastMonth - this[side].dayOfWeek + this.config.locale.firstDay + 1;
+      this[side].startDay = this[side].daysInLastMonth - this[side].dayOfWeek + this.locale.firstDay + 1;
       if (this[side].startDay > this[side].daysInLastMonth)
         this[side].startDay -= 7;
-      if (this[side].dayOfWeek === this.config.locale.firstDay)
+      if (this[side].dayOfWeek === this.locale.firstDay)
         this[side].startDay = this[side].daysInLastMonth - 6;
 
       curDate = moment([this[side].lastYear, this[side].lastMonth, this[side].startDay, 12, minute, second]);
@@ -519,7 +542,7 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
       this[side].minDate = side === 'left' ? dr.minDate : dr.startDate;
       dr.maxDate = dr.maxDate;
       this.selected = side === 'left' ? dr.startDate : dr.endDate;
-      this.arrow = this.config.locale.direction === 'ltr' ?
+      this.arrow = this.locale.direction === 'ltr' ?
                     {left: 'chevron-left', right: 'chevron-right'} : {left: 'chevron-right', right: 'chevron-left'};
       if (dr.endDate == null && this.config.dateLimit) {
         const dl = this.config.dateLimit,
@@ -651,8 +674,8 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
 
   initFormInputs() {
     const dr = this.config.dateRange;
-    this.daterangepickerStart = dr.startDate ? dr.startDate.format(this.config.locale.format) : null;
-    this.daterangepickerEnd = dr.endDate ? dr.endDate.format(this.config.locale.format) : null;
+    this.daterangepickerStart = dr.startDate ? dr.startDate.format(this.locale.format) : null;
+    this.daterangepickerEnd = dr.endDate ? dr.endDate.format(this.locale.format) : null;
     this.daterangeInputValue = this.daterangepickerStart + ' - ' + (this.daterangepickerEnd !== null ? this.daterangepickerEnd : '');
   }
 
@@ -670,9 +693,9 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
 
     // We update the start/end inputs to match what the date being hovered on
     if (dr.endDate && this.leftInputHasFocus) {
-      this.daterangepickerStart = date.format(this.config.locale.format);
+      this.daterangepickerStart = date.format(this.locale.format);
     } else if (!dr.endDate && !this.rightInputHasFocus) {
-      this.daterangepickerEnd = date.format(this.config.locale.format);
+      this.daterangepickerEnd = date.format(this.locale.format);
     }
 
     // Whenever a start date is hovered over, we check all days displayed and make days that
@@ -841,7 +864,7 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
   clickRange(label: string, range: moment.Moment[]) {
     const dr = this.config.dateRange;
     this.chosenLabel = label;
-    if (label === this.config.locale.customRangeLabel) {
+    if (label === this.locale.customRangeLabel) {
       this.showCalendars();
     } else {
       dr.startDate = range[0];
@@ -859,10 +882,10 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
 
   updateElement() {
     if (!this.config.options.singleDatePicker) {
-      this.daterangeInputValue = this.config.dateRange.startDate.format(this.config.locale.format) +
-        this.config.locale.separator + this.config.dateRange.endDate.format(this.config.locale.format);
+      this.daterangeInputValue = this.config.dateRange.startDate.format(this.locale.format) +
+        this.locale.separator + this.config.dateRange.endDate.format(this.locale.format);
       this.changed.emit(null);
     }
-    this.daterangeInputValue = this.config.dateRange.startDate.format(this.config.locale.format);
+    this.daterangeInputValue = this.config.dateRange.startDate.format(this.locale.format);
   }
 }

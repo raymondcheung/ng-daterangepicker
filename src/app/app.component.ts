@@ -12,7 +12,7 @@ export class AppComponent {
   public name = 'Daterange Picker Demo';
   public setDateLimit: boolean;
   public setRanges: boolean;
-  public setLocale: boolean;
+  public localeEnabled: boolean;
 
   public dateLimit: DateLimit = {
     amount: 2,
@@ -47,10 +47,10 @@ export class AppComponent {
 
   public config: Config = {
     dateRange: {
-      startDate: moment('11/08/2016').startOf('day'),
-      endDate: moment('11/25/2016').startOf('day'),
-      minDate: moment('09/01/2015'),
-      maxDate: moment('09/01/2021'),
+      startDate: moment().subtract(1, 'weeks').startOf('day'),
+      endDate: moment().add(1, 'weeks').startOf('day'),
+      minDate: moment().subtract(2, 'years').startOf('day'),
+      maxDate: moment().add(2, 'years').startOf('day'),
     },
     options: {
       singleDatePicker: false,
@@ -58,7 +58,7 @@ export class AppComponent {
       showISOWeekNumbers: false,
       showWeekNumbers: false,
       rangesEnabled: true,
-      linkedCalendars: true,
+      linkedCalendars: false,
       alwaysShowCalendar: false
     },
     timePicker: {   
@@ -110,11 +110,11 @@ export class AppComponent {
       ...this.config,
       dateLimit: this.setDateLimit ? this.dateLimit : null,
       ranges: this.setRanges ? this.ranges : null,
-      locale: {
+      locale: this.localeEnabled ? {
         ...this.config.locale,
         format,
         daysOfWeek
-      }
+      } : null
     };
 
     this.config$.next(config)
