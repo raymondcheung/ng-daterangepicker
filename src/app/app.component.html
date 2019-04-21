@@ -12,19 +12,19 @@
           </div>
           <div class="form-group">
             <label for="startDate">startDate</label>
-            <input (blur)="buildConfig()" type="text" name="startDate" [(ngModel)]="config.startDate" class="form-control" id="startDate">
+            <input (blur)="buildConfig()" type="text" name="startDate" [(ngModel)]="config.dateRange.startDate" class="form-control" id="startDate">
           </div>
           <div class="form-group">
             <label for="endDate">endDate</label>
-            <input (blur)="buildConfig()" type="text" name="endDate" [(ngModel)]="config.endDate" class="form-control" id="endDate">
+            <input (blur)="buildConfig()" type="text" name="endDate" [(ngModel)]="config.dateRange.endDate" class="form-control" id="endDate">
           </div>
           <div class="form-group">
             <label for="minDate">minDate</label>
-            <input (blur)="buildConfig()" type="text" name="minDate" [(ngModel)]="config.minDate" class="form-control" id="minDate" value="" ng-init="config.minDate = ">
+            <input (blur)="buildConfig()" type="text" name="minDate" [(ngModel)]="config.dateRange.minDate" class="form-control" id="minDate" value="" ng-init="config.minDate = ">
           </div>
           <div class="form-group">
             <label for="maxDate">maxDate</label>
-            <input (blur)="buildConfig()" type="text" name="maxDate" [(ngModel)]="config.maxDate" class="form-control" id="maxDate" value="" ng-init="config.maxDate = ">
+            <input (blur)="buildConfig()" type="text" name="maxDate" [(ngModel)]="config.dateRange.maxDate" class="form-control" id="maxDate" value="" ng-init="config.maxDate = ">
           </div>
         </div>
         <div class="col-md-4">

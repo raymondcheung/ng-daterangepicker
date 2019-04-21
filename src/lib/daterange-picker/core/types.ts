@@ -57,7 +57,7 @@ export interface Options {
 }
 
 export class DefaultLocale implements Locale {
-  format = '';
+  format = 'MM/DD/YYYY HH:mm:ss';
   direction = 'ltr';
   separator = '';
   weekLabel = '';

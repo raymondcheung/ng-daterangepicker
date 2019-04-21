@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import { Config, Locale, DefaultLocale, Calendar } from './core/types';
 
 export interface Side {
-  timeSelected: any;
+  timeSelected: moment.Moment;
   calendar: Calendar;
 }
 
@@ -588,15 +588,15 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
         let x = false;
         if (this.hourRightValue) {
           x = true;
-          this[side].timeSelected.hour = this.hourRightValue;
+          this[side].timeSelected.hour(parseInt(this.hourRightValue, 10));
         }
         if (this.minuteRightValue) {
           x = true;
-          this[side].timeSelected.minute = this.minuteRightValue;
+          this[side].timeSelected.minute(parseInt(this.minuteRightValue, 10));
         }
         if (this.secondRightValue) {
           x = true;
-          this[side].timeSelected.second = this.secondRightValue;
+          this[side].timeSelected.second(parseInt(this.secondRightValue, 10));
         }
         if (x) {
           const ampm = this.ampmRightValue;
@@ -810,7 +810,7 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
    * then set other calendar side also.
    */
   clickDropdownYear(side: string, _year: string) {
-    const year = parseInt(_year);
+    const year = parseInt(_year, 10);
     if (this.config.options.linkedCalendars) {
       if (side === 'left') {
         this.left.calendar.month.year(year);
