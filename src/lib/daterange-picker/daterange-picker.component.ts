@@ -109,7 +109,7 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
 
   getDaterangepickerClasses(): string[] {
     const classes = [];
-    if (this.config.options.singleDatePicker || this.config.options.alwaysShowCalendar) {
+    if (this.config.options.alwaysShowCalendars) {
       classes.push('single');
     } else {
       classes.push('show-calendar');
@@ -198,26 +198,7 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
       dr.endDate = dr.endDate.endOf('day');
     }
 
-    if (this.config.options.singleDatePicker) {
-      // TODO:
-      // The div.daterangepicker width:auto problem needs to be fixed
-      // before singleDatePicker can be worked on because the width
-      // needs to be 'auto' to readjust the div.daterangepicker width
-      // to be smaller because of only one calendar appearing.
-
-      // this.container.addClass('single');
-      // this.container.find('.calendar.left').addClass('single');
-      // this.container.find('.calendar.left').show();
-      // this.container.find('.calendar.right').hide();
-      // this.container.find('.daterangepicker_input input, .daterangepicker_input > i').hide();
-      // if (this.config.timePicker.show) {
-      //     this.container.find('.ranges ul').hide();
-      // } else {
-      //     this.container.find('.ranges').hide();
-      // }
-    }
-
-    if ((typeof this.config.ranges === 'undefined' && !this.config.options.singleDatePicker) || this.config.options.alwaysShowCalendar) {
+    if ((typeof this.config.ranges === 'undefined') || this.config.options.alwaysShowCalendars) {
       this.showCalendarClass = 'show-calendar';
     }
 
@@ -323,7 +304,7 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
           linkedCalendars = this.config.options.linkedCalendars;
     if (dr.endDate) {
       // if both dates are visible already, do nothing
-      if (!this.config.options.singleDatePicker && this.left.calendar.month && this.right.calendar.month &&
+      if (this.left.calendar.month && this.right.calendar.month &&
         (dr.startDate.format('YYYY-MM') === this.left.calendar.month.format('YYYY-MM') ||
           dr.startDate.format('YYYY-MM') === this.right.calendar.month.format('YYYY-MM')) &&
         (dr.endDate.format('YYYY-MM') === this.left.calendar.month.format('YYYY-MM') ||
@@ -346,7 +327,7 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
         this.right.calendar.month = dr.startDate.clone().date(2).add(1, 'month');
       }
     }
-    if (dr.maxDate && linkedCalendars && !this.config.options.singleDatePicker && this.right.calendar.month > dr.maxDate) {
+    if (dr.maxDate && linkedCalendars && this.right.calendar.month > dr.maxDate) {
       this.right.calendar.month = dr.maxDate.clone().date(2);
       this.left.calendar.month = dr.maxDate.clone().date(2).subtract(1, 'month');
     }
@@ -798,9 +779,6 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
     } else {
       this.setEndDate(date.clone());
     }
-    if (this.config.options.singleDatePicker) {
-        this.setEndDate(dr.startDate);
-    }
 
     this.updateView();
   }
@@ -885,19 +863,14 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
         dr.startDate.startOf('day');
         dr.endDate.startOf('day');
       }
-      if (!this.config.options.alwaysShowCalendar) {
-        this.showCalendars = () => false;
-      }
       this.updateView();
     }
   }
 
   updateElement() {
-    if (!this.config.options.singleDatePicker) {
-      this.daterangeInputValue = this.config.dateRange.startDate.format(this.locale.format) +
-        this.locale.separator + this.config.dateRange.endDate.format(this.locale.format);
-      this.changed.emit(null);
-    }
+    this.daterangeInputValue = this.config.dateRange.startDate.format(this.locale.format) +
+      this.locale.separator + this.config.dateRange.endDate.format(this.locale.format);
+    this.changed.emit(null);
     this.daterangeInputValue = this.config.dateRange.startDate.format(this.locale.format);
   }
 }

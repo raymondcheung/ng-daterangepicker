@@ -12,7 +12,7 @@ export class AppComponent {
   public name = 'Daterange Picker Demo';
   public setDateLimit: boolean;
   public setRanges: boolean;
-  public localeEnabled: boolean;
+  public localeEnabled: boolean = true;
 
   public dateLimit: DateLimit = {
     amount: 2,
@@ -53,13 +53,12 @@ export class AppComponent {
       maxDate: moment().add(2, 'years').startOf('day'),
     },
     options: {
-      singleDatePicker: false,
       showDropdowns: false,
       showISOWeekNumbers: false,
       showWeekNumbers: false,
       rangesEnabled: true,
       linkedCalendars: false,
-      alwaysShowCalendar: false
+      alwaysShowCalendars: false
     },
     timePicker: {   
       show: true,
@@ -77,12 +76,14 @@ export class AppComponent {
       monthNames: moment.monthsShort(),
       firstDay: moment.localeData().firstDayOfWeek(),
     },
-    dateLimit: null,
-    applyClass: null,
-    cancelClass: null
+    dateLimit: null
   };
 
   public config$ = new BehaviorSubject(this.config);
+
+  public setDate(key, value) {
+    this.config.dateRange[key] = moment(value)
+  }
 
   buildConfig() {
     let format = '';

@@ -1,6 +1,6 @@
 <input type="text" id="{{inputId}}" class="form-control" [(ngModel)]="daterangeInputValue" (focus)="show()" />
 <div class="daterangepicker-wrapper">
-<div *ngIf="isShowing$ | async" class="daterangepicker dropdown-menu {{opensClass}} {{showCalendarClass}} {{locale.direction}}" [ngClass]="getDaterangepickerClasses()">
+<div *ngIf="(config.options.alwaysShowCalendars)" class="daterangepicker dropdown-menu {{opensClass}} {{showCalendarClass}} {{locale.direction}}" [ngClass]="getDaterangepickerClasses()">
   <div class="ranges">
       <div class="range_inputs">
           <ul *ngIf="keys(ranges).length > 0">
@@ -118,7 +118,7 @@
           <tbody>
             <tr *ngFor="let row of getArrayWithNumbersBetween(-1, 6)">
               <!-- if config.options.showWeekNumbers, then show week, else if config.options.showISOWeekNumbers, show isoWeek, else nothing -->
-              <td [hidden]="!config.options.showWeekNumbers || config.options.showISOWeekNumbers" class="week">{{config.options.showWeekNumbers ? right.calendar[row][0].date.week() : (config.options.showISOWeekNumbers ? right.calendar[row][0].date.isoWeek() : "")}}</td>
+              <td *ngIf="config.options.showWeekNumbers || config.options.showISOWeekNumbers" class="week">{{config.options.showWeekNumbers ? right.calendar[row][0].date.week() : (config.options.showISOWeekNumbers ? right.calendar[row][0].date.isoWeek() : "")}}</td>
               <td (mouseenter)="hoverDate(row, col, 'right')" (mousedown)="clickDate(row, col, 'right')" data-title="r{{row}}c{{col}}" [ngClass]="getClassesForDay(row, col, 'right')" *ngFor="let col of getArrayWithNumbersBetween(-1, 7)">
                 {{right.calendar[row][col].date.date()}}
               </td>

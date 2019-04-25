@@ -22,9 +22,6 @@ export interface Config {
   readonly locale?: any;
   readonly dateLimit?: DateLimit;
            dateRange?: Daterange;
-  readonly applyClass?: string;
-  readonly cancelClass?: string;
-  readonly buttonClasses?: string[];
   readonly isInvalidDate?: (d: string) => boolean;
   readonly isCustomDate?: (d: string) => boolean;
   readonly timePicker?: TimePicker;
@@ -47,12 +44,11 @@ export interface Daterange {
 
 export interface Options {
   readonly rangesEnabled?: boolean;
-  readonly alwaysShowCalendar?: boolean;
+  readonly alwaysShowCalendars?: boolean;
   readonly showDropdowns?: boolean;
   readonly showWeekNumbers?: boolean;
   readonly showISOWeekNumbers?: boolean;
   readonly showCustomRangeLabel?: boolean;
-  readonly singleDatePicker?: boolean;
   readonly linkedCalendars?: boolean;
 }
 

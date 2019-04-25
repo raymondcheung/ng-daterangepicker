@@ -5,34 +5,25 @@
       <h3>text input changes configs onBlur</h3>
       <form>
       <div class="row">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="parentEl">parentEl</label>
-            <input (blur)="buildConfig()" type="text" name="parentEl" [(ngModel)]="config.parentEl" class="form-control" id="parentEl" value="" placeholder="body">
-          </div>
+        <div class="col-md-6">
           <div class="form-group">
             <label for="startDate">startDate</label>
-            <input (blur)="buildConfig()" type="text" name="startDate" [(ngModel)]="config.dateRange.startDate" class="form-control" id="startDate">
+            <input #startDate (blur)="setDate('startDate', startDate.value);buildConfig()" [value]="config.dateRange.startDate" type="text" name="startDate" class="form-control" id="startDate">
           </div>
           <div class="form-group">
             <label for="endDate">endDate</label>
-            <input (blur)="buildConfig()" type="text" name="endDate" [(ngModel)]="config.dateRange.endDate" class="form-control" id="endDate">
+            <input #endDate (blur)="setDate('endDate', endDate.value);buildConfig()" [value]="config.dateRange.endDate" type="text" name="endDate" class="form-control" id="endDate">
           </div>
           <div class="form-group">
             <label for="minDate">minDate</label>
-            <input (blur)="buildConfig()" type="text" name="minDate" [(ngModel)]="config.dateRange.minDate" class="form-control" id="minDate" value="" ng-init="config.minDate = ">
+            <input #minDate (blur)="setDate('minDate', minDate.value);buildConfig()" [value]="config.dateRange.minDate" type="text" name="minDate" class="form-control" id="minDate" value="" ng-init="config.minDate = ">
           </div>
           <div class="form-group">
             <label for="maxDate">maxDate</label>
-            <input (blur)="buildConfig()" type="text" name="maxDate" [(ngModel)]="config.dateRange.maxDate" class="form-control" id="maxDate" value="" ng-init="config.maxDate = ">
+            <input #maxDate (blur)="setDate('maxDate', maxDate.value);buildConfig()" [value]="config.dateRange.maxDate" type="text" name="maxDate" class="form-control" id="maxDate" value="" ng-init="config.maxDate = ">
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="checkbox">
-            <label>
-              <input (change)="buildConfig()" type="checkbox" name="singleDatePicker" [(ngModel)]="config.options.singleDatePicker" id="singleDatePicker"> singleDatePicker
-            </label>
-          </div>
+        <div class="col-md-6">
           <div class="checkbox">
             <label>
               <input (change)="buildConfig()" type="checkbox" name="showDropdowns" [(ngModel)]="config.options.showDropdowns" id="showDropdowns"> showDropdowns
@@ -90,22 +81,8 @@
           </div>
           <div class="checkbox">
             <label>
-              <input (change)="buildConfig()" type="checkbox" name="alwaysShowCalendars" [(ngModel)]="config.alwaysShowCalendars" id="alwaysShowCalendars"> alwaysShowCalendars
+              <input (change)="buildConfig()" type="checkbox" name="alwaysShowCalendars" [(ngModel)]="config.options.alwaysShowCalendars" id="alwaysShowCalendars"> alwaysShowCalendars
             </label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="buttonClasses">buttonClasses</label>
-            <input (blur)="buildConfig()" type="text" name="buttonClasses" [(ngModel)]="config.buttonClasses" class="form-control" id="buttonClasses" value="btn btn-sm">
-          </div>
-          <div class="form-group">
-            <label for="applyClass">applyClass</label>
-            <input (blur)="buildConfig()" type="text" name="applyClass" [(ngModel)]="config.applyClass" class="form-control" id="applyClass" value="btn-success">
-          </div>
-          <div class="form-group">
-            <label for="cancelClass">cancelClass</label>
-            <input (blur)="buildConfig()" type="text" name="cancelClass" [(ngModel)]="config.cancelClass" class="form-control" id="cancelClass" value="btn-default">
           </div>
         </div>
       </div>
