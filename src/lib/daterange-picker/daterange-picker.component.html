@@ -1,0 +1,131 @@
+<input type="text" id="{{inputId}}" class="form-control" [(ngModel)]="daterangeInputValue" (focus)="show()" />
+<div class="daterangepicker-wrapper">
+<div *ngIf="(config.options.alwaysShowCalendars)" class="daterangepicker dropdown-menu {{opensClass}} {{showCalendarClass}} {{locale.direction}}" [ngClass]="getDaterangepickerClasses()">
+  <div class="ranges">
+      <div class="range_inputs">
+          <ul *ngIf="keys(ranges).length > 0">
+            <li *ngFor="let label of keys(ranges)" (click)="clickRange(label, ranges[label])" [ngClass]="{active: label === chosenLabel}">{{label}}</li>
+          </ul>
+      </div>
+  </div>
+  <div class="calendar left">
+      <div class="daterangepicker_input">
+        <input class="input-mini form-control" type="text" name="daterangepicker_start" (focus)="rightInputHasFocus=false; leftInputHasFocus=true" [ngClass]="{active: endDate}" [(ngModel)]="daterangepickerStart"/>
+        <i (click)="renderCalendar()" class="fa fa-calendar glyphicon glyphicon-calendar"></i>
+        <div class="calendar-time" [hidden]="!config.timePicker.show">
+          <div *ngIf="config.timePicker.show">
+            <select [(ngModel)]="hourLeftValue" (change)="updateDateWithTimepicker('left')" class="hourselect" ng-init="hourLeftValue='12'">
+              <option *ngFor="let h of hourRange">{{h}}</option>
+            </select>
+            :
+            <select [(ngModel)]="minuteLeftValue" (change)="updateDateWithTimepicker('left')" class="minuteselect" ng-init="minuteLeftValue='00'">
+              <option *ngFor="let m of minuteRange">{{m}}</option>
+            </select>
+            :
+            <select [(ngModel)]="secondLeftValue" (change)="updateDateWithTimepicker('left')" class="secondselect" ng-init="secondLeftValue='00'">
+              <option *ngFor="let s of secondRange">{{s}}</option>
+            </select>
+            <select *ngIf="!timePicker24Hour" (change)="updateDateWithTimepicker('left')" class="ampmselect" [(ngModel)]="ampmLeftValue" ng-init="ampmLeftValue='AM'">
+              <option class="{{left.AMDisabledClass}}" value="AM">AM</option>
+              <option class="{{left.PMDisabledClass}}" value="PM">PM</option>
+            </select>
+          </div>
+          <i class="fa fa-clock-o glyphicon glyphicon-time"></i>
+        </div>
+      </div>
+      <div class="calendar-table">
+        <table class="table-condensed">
+          <thead>
+            <tr>
+              <th *ngIf="config.options.showWeekNumbers || config.options.showISOWeekNumbers"></th>
+              <th [class.hidden]="isPreviousButtonHidden('left')" (click)="clickPrev('left')" class="prev available"><span></span></th>
+              <th colspan="5" class="month">
+                <!-- If we are not showing dropdowns, just output plain text -->
+                <div *ngIf="!config.options.showDropdowns">{{locale.monthNames[left.calendar[1][1].date.month()] + left.calendar[1][1].date.format(" YYYY")}}</div>
+                <!-- If we are showing dropdowns, just output appropriate select inputs -->
+                <select *ngIf="config.options.showDropdowns" class="monthselect" [(ngModel)]="left.selectedMonth" (change)="clickDropdownMonth('left', left.selectedMonth)" ng-init="left.selectedMonth=left.calendar.month.month()+''">
+                  <option *ngFor="let i of getArrayWithNumbersBetween(-1, 12)" [disabled]="!(!left.inMinYear || i >= left.minDate.month()) && (!left.inMaxYear || i <= left.maxDate.month())" value="{{i}}">{{locale.monthNames[i]}}</option>
+                </select>
+
+                <select *ngIf="config.options.showDropdowns" class="yearselect" [(ngModel)]="left.selectedYear" (change)="clickDropdownYear('left', left.selectedYear)" ng-init="left.selectedYear=left.calendar.month.year()+''">
+                  <option *ngFor="let y of getArrayWithNumbersBetween(this.config.dateRange.minDate.year()-1, this.config.dateRange.maxDate.year()+1)" value="{{y}}">
+                    {{y}}
+                  </option>
+                </select>
+              </th>
+              <th [class.hidden]="isNextButtonHidden('left')" (click)="clickNext('left')" class="next available"><span></span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of getArrayWithNumbersBetween(-1, 6)">
+              <!-- if config.options.showWeekNumbers, then show week, else if config.options.showISOWeekNumbers, show isoWeek, else nothing -->
+              <td *ngIf="config.options.showWeekNumbers || config.options.showISOWeekNumbers" class="week">{{config.options.showWeekNumbers ? left.calendar[row][0].date.week() : (config.options.showISOWeekNumbers ? left.calendar[row][0].date.isoWeek() : "")}}</td>
+              <td (mouseenter)="hoverDate(row, col, 'left')" (mousedown)="clickDate(row, col, 'left')" data-title="r{{row}}c{{col}}" [ngClass]="getClassesForDay(row, col, 'left')" *ngFor="let col of getArrayWithNumbersBetween(-1, 7)">
+                {{left.calendar[row][col].date.date()}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  </div>
+
+  <div class="calendar right">
+      <div class="daterangepicker_input">
+        <input class="input-mini form-control" type="text" (focus)="rightInputHasFocus=true; leftInputHasFocus=false" name="daterangepicker_end" [ngClass]="{active: !endDate}" [(ngModel)]="daterangepickerEnd"/>
+        <i class="fa fa-calendar glyphicon glyphicon-calendar"></i>
+        <div class="calendar-time" [hidden]="!config.timePicker.show">
+          <div *ngIf="config.timePicker.show">
+            <select [disabled]="right.calendar.disabled" (change)="updateDateWithTimepicker('right')" [(ngModel)]="hourRightValue" class="hourselect" ng-init="hourRightValue='12'">
+              <option *ngFor="let h of hourRange">{{h}}</option>
+            </select>
+            :
+            <select [disabled]="right.calendar.disabled" (change)="updateDateWithTimepicker('right')" [(ngModel)]="minuteRightValue" class="minuteselect" ng-init="minuteRightValue='00'">
+              <option *ngFor="let m of minuteRange">{{m}}</option>
+            </select>
+            :
+            <select [disabled]="right.calendar.disabled" (change)="updateDateWithTimepicker('right')" [(ngModel)]="secondRightValue" class="secondselect" ng-init="secondRightValue='00'">
+              <option *ngFor="let s of secondRange">{{s}}</option>
+            </select>
+            <select [disabled]="right.calendar.disabled" (change)="updateDateWithTimepicker('right')" *ngIf="!timePicker24Hour" class="ampmselect" [(ngModel)]="ampmRightValue" ng-init="ampmRightValue='AM'">
+              <option class="{{right.AMDisabledClass}}" value="AM">AM</option>
+              <option class="{{right.PMDisabledClass}}" value="PM">PM</option>
+            </select>
+          </div>
+          <i class="fa fa-clock-o glyphicon glyphicon-time"></i>
+        </div>
+      </div>
+      <div class="calendar-table">
+        <table class="table-condensed">
+          <thead>
+            <tr>
+              <th [hidden]="!config.options.showWeekNumbers || config.options.showISOWeekNumbers"></th>
+              <th [class.hidden]="isPreviousButtonHidden('right')" (click)="clickPrev('right')" class="prev available"><span></span></th>
+              <th colspan="5" class="month">
+                <!-- If we are not showing dropdowns, just output plain text -->
+                <div [hidden]="!!config.options.showDropdowns">{{locale.monthNames[right.calendar[1][1].date.month()] + right.calendar[1][1].date.format(" YYYY")}}</div>
+                <!-- If we are showing dropdowns, just output appropriate select inputs -->
+                <select [hidden]="!config.options.showDropdowns" class="monthselect" [(ngModel)]="right.selectedMonth" (change)="clickDropdownMonth('right', right.selectedMonth)" ng-init="right.selectedMonth=right.calendar.month.month()+''">
+                  <option  *ngFor="let i of getArrayWithNumbersBetween(-1, 12)" [disabled]="!(!right.inMinYear || i >= right.minDate.month()) && (!right.inMaxYear || i <= right.maxDate.month())" value="{{i}}">{{locale.monthNames[i]}}</option>
+                </select>
+                <select [hidden]="!config.options.showDropdowns" class="yearselect" [(ngModel)]="right.selectedYear" (change)="clickDropdownYear('right', right.selectedYear)" ng-init="right.selectedYear=right.calendar.month.year()+''">
+                  <option *ngFor="let y of getArrayWithNumbersBetween(this.config.dateRange.minDate.year() - 1, this.config.dateRange.maxDate.year() + 1)">{{y}}</option>
+                </select>
+              </th>
+              <th [class.hidden]="isNextButtonHidden('right')" (click)="clickNext('right')" class="next available"><span></span></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let row of getArrayWithNumbersBetween(-1, 6)">
+              <!-- if config.options.showWeekNumbers, then show week, else if config.options.showISOWeekNumbers, show isoWeek, else nothing -->
+              <td *ngIf="config.options.showWeekNumbers || config.options.showISOWeekNumbers" class="week">{{config.options.showWeekNumbers ? right.calendar[row][0].date.week() : (config.options.showISOWeekNumbers ? right.calendar[row][0].date.isoWeek() : "")}}</td>
+              <td (mouseenter)="hoverDate(row, col, 'right')" (mousedown)="clickDate(row, col, 'right')" data-title="r{{row}}c{{col}}" [ngClass]="getClassesForDay(row, col, 'right')" *ngFor="let col of getArrayWithNumbersBetween(-1, 7)">
+                {{right.calendar[row][col].date.date()}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  </div>
+</div>
+</div>
