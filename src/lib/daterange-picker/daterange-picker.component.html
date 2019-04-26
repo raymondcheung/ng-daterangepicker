@@ -1,6 +1,6 @@
 <input type="text" id="{{inputId}}" class="form-control" [(ngModel)]="daterangeInputValue" (focus)="show()" />
 <div class="daterangepicker-wrapper">
-<div *ngIf="(config.options.alwaysShowCalendars)" class="daterangepicker dropdown-menu {{opensClass}} {{showCalendarClass}} {{locale.direction}}" [ngClass]="getDaterangepickerClasses()">
+<div *ngIf="isShowing$ | async" class="daterangepicker dropdown-menu {{opensClass}} {{locale.direction}} show-calendar">
   <div class="ranges">
       <div class="range_inputs">
           <ul *ngIf="keys(ranges).length > 0">
