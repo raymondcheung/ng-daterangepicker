@@ -24,6 +24,12 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
   public show() {
     this.isShowing$.next(true);
   }
+
+  public hide() {
+    if (!this.config.options.alwaysShowCalendars) {
+      this.isShowing$.next(false);
+    }
+  }
   isShowing$ = new BehaviorSubject(false);
   @HostListener('document:click', ['$event'])
   private _documentClick(e: MouseEvent) {
@@ -38,9 +44,9 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
     }
     setTimeout(() => {
       if (clickedOnDaterangePicker) {
-        this.isShowing$.next(true);
+        this.show();
       } else {
-        this.isShowing$.next(false);
+        this.hide();
       }
     }, 0);
   }
@@ -71,7 +77,6 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
   public isInvalidDate: (x: moment.Moment) => boolean;
   public isCustomDate: (x: moment.Moment) => boolean;
   public ranges: {} = {};
-  public showCalendarClass: string;
 
   public hourRightValue = '12';
   public minuteRightValue = '0';
@@ -97,25 +102,10 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
   public locale: Locale;
   public daterangepickerStart: string;
   public daterangepickerEnd: string;
-  public showCalendarsClass: string;
   public daterangeInputValue: string;
   public chosenLabel: string;
 
   constructor(@Inject(DOCUMENT) private document: any, private eRef: ElementRef) {}
-
-  makeCalendarVisible() {
-    this.isShowing$.next(true);
-  }
-
-  getDaterangepickerClasses(): string[] {
-    const classes = [];
-    if (this.config.options.alwaysShowCalendars) {
-      classes.push('single');
-    } else {
-      classes.push('show-calendar');
-    }
-    return classes;
-  }
 
   ngOnChanges() {
     this.ngOnInit();
@@ -198,8 +188,8 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
       dr.endDate = dr.endDate.endOf('day');
     }
 
-    if ((typeof this.config.ranges === 'undefined') || this.config.options.alwaysShowCalendars) {
-      this.showCalendarClass = 'show-calendar';
+    if (this.config.options.alwaysShowCalendars) {
+      this.show();
     }
 
     if (this.reload) {
@@ -214,10 +204,6 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
 
     this.updateView();
   }
-
-  // ngOnChanges() {
-  //   this.ngOnInit();
-  // }
 
   setStartDate(startDate: string|{}) {
     const dr = this.config.dateRange,
@@ -671,14 +657,6 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
     this.daterangeInputValue = this.daterangepickerStart + ' - ' + (this.daterangepickerEnd !== null ? this.daterangepickerEnd : '');
   }
 
-
-
-  showCalendars() {
-    this.showCalendarsClass = 'show-calendar';
-    // this.move();
-    this.showCalendar.emit(this);
-  }
-
   hoverDate(row: number, col: number, side: string) {
     const dr = this.config.dateRange,
           date = this[side].calendar[row][col].date;
@@ -855,7 +833,7 @@ export class DaterangePickerComponent implements OnInit, OnChanges {
     const dr = this.config.dateRange;
     this.chosenLabel = label;
     if (label === this.locale.customRangeLabel) {
-      this.showCalendars();
+      this.show();
     } else {
       dr.startDate = range[0];
       dr.endDate = range[1];

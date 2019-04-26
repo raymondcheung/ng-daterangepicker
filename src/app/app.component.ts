@@ -45,7 +45,7 @@ export class AppComponent {
     ]
   };
 
-  public config: Config = {
+  public config = {
     dateRange: {
       startDate: moment().subtract(1, 'weeks').startOf('day'),
       endDate: moment().add(1, 'weeks').startOf('day'),
@@ -118,7 +118,7 @@ export class AppComponent {
       } : null
     };
 
-    this.config$.next(config)
+    this.config$.next(config);
   }
 
   constructor() {
