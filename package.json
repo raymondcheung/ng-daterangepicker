@@ -1,5 +1,5 @@
 {
-  "name": "daterange-picker-demo",
+  "name": "daterange-picker",
   "version": "0.1.0",
   "scripts": {
     "ng": "ng",
