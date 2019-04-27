@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Config, DateLimit, Locale } from 'src/lib/daterange-picker/core/types';
+import { DateLimit } from 'src/lib/daterange-picker/core/types';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
 
