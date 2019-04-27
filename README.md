@@ -1,4 +1,4 @@
-### Date Range Picker for Angular
+# DaterangePicker
 
 ### Links:
 - [Demo](#demo)
