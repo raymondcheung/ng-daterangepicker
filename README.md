@@ -1,5 +1,5 @@
 # DaterangePicker
-
+An Angular version of (daterange-picker)[https://github.com/dangrossman/daterangepicker] built with Angular from ground up.
 ### Links:
 - [Demo](#demo)
 - [Tests](#tests)
