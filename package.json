@@ -1,19 +1,29 @@
 {
+  "$schema": "./node_modules/ng-packagr/package.schema.json",
   "name": "daterange-picker",
   "version": "0.1.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng-packagr -p package.json",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
+  "ngPackage": {
+    "lib": {
+      "entryFile": "./src/lib/daterange-picker/public_api.ts"
+    }
+  },
   "private": true,
   "peerDependencies": {
-    "@ng-bootstrap/ng-bootstrap": "4.x"
+    "@ng-bootstrap/ng-bootstrap": "4.x",
+    "moment": "2.x",
+    "@angular/core": "7.x",
+    "@angular/common": "7.x"
+
   },
-  "dependencies": {
+  "devDependencies": {
     "@angular/animations": "~7.2.0",
     "@angular/common": "~7.2.0",
     "@angular/compiler": "~7.2.0",
@@ -25,13 +35,12 @@
     "core-js": "^2.5.4",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
+    "ng-packagr": "^5.1.0",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
-    "zone.js": "~0.8.26"
-  },
-  "devDependencies": {
+    "zone.js": "~0.8.26",
     "@angular-devkit/build-angular": "^0.13.8",
-    "@angular/cli": "~7.3.6",
+    "@angular/cli": "~7.3.8",
     "@angular/compiler-cli": "~7.2.0",
     "@angular/language-service": "~7.2.0",
     "@ng-bootstrap/ng-bootstrap": "~4.1.1",
@@ -43,11 +52,13 @@
     "codelyzer": "~4.5.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
+    "jquery": "~1.9.1",
     "karma": "~4.0.0",
     "karma-chrome-launcher": "~2.2.0",
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~1.1.2",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "popper.js": "^1.14.7",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
